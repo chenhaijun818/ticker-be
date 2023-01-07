@@ -2,8 +2,6 @@ import { Body, Controller, Get, Post } from "@nestjs/common";
 import { Model } from "mongoose";
 import { TodoDocument } from "./models/todo";
 import { InjectModel } from "@nestjs/mongoose";
-import { nanoid } from "nanoid";
-
 
 @Controller()
 export class AppController {
@@ -12,9 +10,7 @@ export class AppController {
 
   @Post("add")
   addTodo(@Body() body) {
-    const id = nanoid(8);
     this.todo.create({
-      id,
       name: body.name,
       pid: body.pid,
     });
@@ -23,6 +19,16 @@ export class AppController {
       data: {},
       message: "success",
     };
+  }
+
+  @Post('delete')
+  async removeTodo(@Body() body) {
+    const res = await this.todo.findByIdAndRemove(body.id);
+    return {
+      code: 200,
+      data: res,
+      message: 'success'
+    }
   }
 
   @Get("todoList")

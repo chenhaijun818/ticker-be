@@ -6,8 +6,8 @@ import path from "node:path";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule,{
     httpsOptions: {
-      key: fs.readFileSync(path.join(__dirname, '../src/certs/traco.key')),
-      cert: fs.readFileSync(path.join(__dirname, '../src/certs/traco.pem'))
+      key: fs.readFileSync(path.join(__dirname, '../certs/traco.key')),
+      cert: fs.readFileSync(path.join(__dirname, '../certs/traco.pem'))
     }
   });
   app.enableCors();

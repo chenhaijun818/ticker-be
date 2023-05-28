@@ -1,21 +1,27 @@
-
-import {join} from 'node:path';
-import { Module } from '@nestjs/common';
-import {ServeStaticModule} from '@nestjs/serve-static';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Todo, TodoSchema } from "./models/todo";
-
+import { HttpModule } from "@nestjs/axios";
+import { TokenInterceptor } from "./core/interceptors/token.interceptor";
+import { APP_INTERCEPTOR } from "@nestjs/core";
+import {ConfigModule} from "@nestjs/config"
+import { User, UserSchema } from "./models/user";
+import {config} from 'dotenv';
+config({path: '.env'})
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'static')
-    }),
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/ticker'),
-    MongooseModule.forFeature([{ name: Todo.name, schema: TodoSchema }])
+    HttpModule,
+    ConfigModule,
+    MongooseModule.forRoot("mongodb://127.0.0.1:27017/ticker"),
+    MongooseModule.forFeature([{ name: Todo.name, schema: TodoSchema }, { name: User.name, schema: UserSchema }]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: APP_INTERCEPTOR,
+    useClass: TokenInterceptor,
+  }],
 })
-export class AppModule {}
+export class AppModule {
+}

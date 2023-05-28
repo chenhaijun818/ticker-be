@@ -11,6 +11,8 @@ export class Todo extends Document {
   name: string;
   @Prop()
   pid: string;
+  @Prop()
+  uid: string;
 }
 
 export const TodoSchema = SchemaFactory.createForClass(Todo);

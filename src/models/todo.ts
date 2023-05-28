@@ -10,6 +10,10 @@ export class Todo extends Document {
   @Prop()
   name: string;
   @Prop()
+  time: number;
+  @Prop()
+  enable: boolean;
+  @Prop()
   pid: string;
   @Prop()
   uid: string;

@@ -38,15 +38,27 @@ export class AppController {
 
   @Post("add")
   addTodo(@Body() body, @Req() req) {
-    console.log(req.user);
     this.todo.create({
       name: body.name,
+      time: body.time,
+      enable: body.enable,
       pid: body.pid,
-      uid: req.user.uid
+      uid: req.user.uid,
     });
     return {
       code: 200,
       data: {},
+      message: "success",
+    };
+  }
+
+  @Post("update")
+  async update(@Body() body, @Req() req) {
+    const { id, ...update } = body;
+    const res = await this.todo.findByIdAndUpdate(id, update).exec();
+    return {
+      code: 200,
+      data: res,
       message: "success",
     };
   }
@@ -63,8 +75,7 @@ export class AppController {
 
   @Get("todoList")
   async getTodoList(@Req() req) {
-    console.log(req.user);
-    const list = await this.todo.find({uid: req.user.uid});
+    const list = await this.todo.find({ uid: req.user.uid });
     return {
       code: 200,
       data: { list },
